@@ -10,7 +10,7 @@ export const CMSProvider = ({ children }: { children: ReactNode }) => {
   const [theme, setTheme] = useState<SiteTheme>(DEFAULT_THEME);
   const [pages, setPages] = useState<Record<string, PageData>>(INITIAL_PAGES);
   const [posts, setPosts] = useState<BlogPost[]>(INITIAL_POSTS);
-  const [packages, setPackages] = useState<TravelPackage[]>([]);
+  const [packages, setPackages] = useState<TravelPackage[]>(INITIAL_PACKAGES);
   const [inquiries, setInquiries] = useState<ContactSubmission[]>([]);
   const [token, setToken] = useState<string | null>(() => localStorage.getItem('wc_token'));
 
@@ -46,10 +46,12 @@ export const CMSProvider = ({ children }: { children: ReactNode }) => {
             if (postsData.length > 0) setPosts(postsData);
         }
         
-        if (pkgRes.ok) {
-           const pkgData = await pkgRes.json();
-           setPackages(pkgData.map((d: any) => ({ ...d, id: d._id || d.id })));
-        }
+       if (pkgRes.ok) {
+   const pkgData = await pkgRes.json();
+   if (pkgData.length > 0) {
+     setPackages(pkgData.map((d: any) => ({ ...d, id: d._id || d.id })));
+   }
+}
 
         if (inqRes.ok) {
             const inqData = await inqRes.json();
